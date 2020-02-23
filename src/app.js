@@ -21,3 +21,5 @@ function myVis(data) {
   console.log('Hi!');
   // EXAMPLE FIRST FUNCTION
 }
+
+console.log("Hello, dynamic viz!");
