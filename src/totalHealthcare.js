@@ -1,7 +1,6 @@
 import {select} from 'd3-selection';
 import {geoPath} from 'd3-geo';
 import {csv, json} from 'd3-fetch';
-import {d3_decomposite} from "d3-composite-projections";
 
 
 function processData(data) {
