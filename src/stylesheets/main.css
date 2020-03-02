@@ -1,14 +1,68 @@
-
 a {
   cursor: pointer;
 }
 
 html,
 body {
-  background: #D6D6CE;
-  font-family: Verdana, Geneva, sans-serif;
+  font-family: 'Abril Fatface';
   height: 100%;
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+h1, h2, h3, h4, h5 {
+  padding: 0;
+  margin: 0;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-down {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-height {
+  height: 1000px;
+}
+
+.full-width {
+  width: 1000px;
+}
+
+/* {
+  border: thin solid red;
+}*/
+
+#app {
+  padding: 50px 100px;
+}
+
+.sidebar {
+  background-color: linen;
+  padding: 10px;
+  width: 200px;
+}
+
+.main-area {
+  align-items: center;
+  justify-content: center;
+  height: 1000px;
+  width: 1000px;
+}
+
+.legend-row {
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 100%;
+  vertical-align: top;
+  overflow: hidden;
 }

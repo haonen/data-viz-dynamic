@@ -1,14 +1,26 @@
 <!doctype html>
 <html>
   <head>
-    <title>Scaffold</title>
+    <title>Dynamic Data Viz (yuweiz)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">  
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app" class="full-height">
+      <div class="flex-down">
+        <h1>Demographic Patterns VS Business Patterns in Health Insurance Coverage</h1>
+        <h3>Oh no what's wrong with the health system in U.S.!</h3>
+        <h5>The Second/Third bi-variate choropleth with legend is on the way!</h5>
+        <div class="buttons-container"></div>
+      </div>
+      <div class="flex full-height">
+        <div class="sidebar flex-down full-height"></div>
+        <div class="main-area flex full-height full-width"></div>
+      </div>
+    </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="./src/app.js"></script>
-    <a>Hello, dynamic world!</a>
+    <script src="https://unpkg.com/topojson@3"></script>
+    <script src="bundle.js"></script>
   </body>
 </html>

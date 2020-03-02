@@ -1,25 +1,73 @@
-// if the data you are going to import is small, then you can import it using es6 import
-// import MY_DATA from './app/data/example.json'
-// (I tend to think it's best to use screaming snake case for imported json)
-console.log("Hello, dynamic viz!");
 const domReady = require('domready');
+import {select} from 'd3-selection';
+import {csv, json} from 'd3-fetch';
+import './stylesheets/main.css';
+import totalHealthcare from './totalHealthcare';
 
 domReady(() => {
-  // this is just one example of how to import data. there are lots of ways to do it!
-  fetch('./data/example.json')
-    .then(response => response.json())
-    .then(data => myVis(data))
-    .catch(e => {
-      console.log(e);
-    });
+  csv('./data/bivariate_2014.csv').then(d => app(d));
+
 });
 
-function myVis(data) {
-  // portrait
-  const width = 5000;
-  const height = (36 / 24) * width;
-  console.log(data, height);
-  console.log('Hi!');
-  // EXAMPLE FIRST FUNCTION
+const slideChartTypeMap = {
+  0: totalHealthcare,
+  1: barChart,
+  2: lineChart,
+};
+
+
+function app(data) {
+  const state = {slideIdx: 0};
+  console.log(data);
+
+  const buttons = select('.buttons-container')
+    .selectAll('button')
+    .data([0, 1, 2])
+    .enter()
+    .append('button')
+    .text(d => d)
+    .on('click', d => {
+      state.slideIdx = d;
+      render();
+      console.log(d);
+    });
+
+  function render() {
+    buttons
+      .style('font-weight', d => {
+        return d === state.slideIdx ? 'bolder' : 'normal';
+      })
+      .text(d => {
+        return d === state.slideIdx ? `SELECTED SLIDE ${d}` : state.slideIdx;
+      });
+    // remove old contents
+    select('.sidebar *').remove();
+    select('.main-area *').remove();
+    // start doing stuff
+    if (state.slideIdx > 0) {
+      select('.main-area')
+        .append('h1')
+        .text(state.slideIdx);
+    }
+
+    //select('.sidebar').text(article[state.slideIdx]);
+    if (slideChartTypeMap[state.slideIdx]) {
+      slideChartTypeMap[state.slideIdx](data);
+    } else {
+      // TODO add a "you screwed up comment/view/whatever"
+    }
+  }
+  
+  
+  render();
+
+  // setInterval(() => {
+  //   state.slideIdx = (state.slideIdx + 1) % 3;
+  //   render();
+  // }, 5000);
 }
 
+
+function barChart(data) {}
+
+function lineChart(data) {}
