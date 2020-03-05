@@ -24,10 +24,11 @@ export default function totalHealthcare(data) {
                 .attr('class', 'flex-down');
                 
     
-    const svg = div
-    .append('svg')
-    .attr('height', height)
-    .attr('width', width);
+    var svg = div
+        .append("svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "-500 -250 1500 1000")
+        .classed("svg-content", true);
 
 
     const colors = [
