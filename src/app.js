@@ -3,6 +3,9 @@ import {select} from 'd3-selection';
 import {csv, json} from 'd3-fetch';
 import './stylesheets/main.css';
 import totalHealthcare from './totalHealthcare';
+import Employer from './Employer';
+import Medicare from './Medicare';
+
 
 domReady(() => {
   csv('./data/bivariate_2014.csv').then(d => app(d));
@@ -11,8 +14,8 @@ domReady(() => {
 
 const slideChartTypeMap = {
   0: totalHealthcare,
-  1: barChart,
-  2: lineChart,
+  1: Employer,
+  2: Medicare,
 };
 
 
@@ -46,8 +49,7 @@ function app(data) {
     // start doing stuff
     if (state.slideIdx > 0) {
       select('.main-area')
-        .append('h1')
-        .text(state.slideIdx);
+        .append('h1');
     }
 
     //select('.sidebar').text(article[state.slideIdx]);
@@ -66,8 +68,3 @@ function app(data) {
   //   render();
   // }, 5000);
 }
-
-
-function barChart(data) {}
-
-function lineChart(data) {}
