@@ -8,9 +8,17 @@ import Medicare from './Medicare';
 
 
 domReady(() => {
-  csv('./data/bivariate_2014.csv').then(d => app(d));
+  Promise.all([
+  csv('./data/bivariate.csv'),
+  json('./data/article.json'),
+]).then(d => {
+  const [data, article] = d;
+  app(data, article);
+});
 
 });
+
+
 
 const slideChartTypeMap = {
   0: totalHealthcare,
@@ -18,8 +26,14 @@ const slideChartTypeMap = {
   2: Medicare,
 };
 
+const InsuranceType = {
+  0: "Total Healthcare",
+  1: "Employer",
+  2: "Medicare",
+};
 
-function app(data) {
+
+function app(data, article) {
   const state = {slideIdx: 0};
   console.log(data);
 
@@ -28,21 +42,19 @@ function app(data) {
     .data([0, 1, 2])
     .enter()
     .append('button')
-    .text(d => d)
+    .text(function(d){return InsuranceType[d];})
     .on('click', d => {
       state.slideIdx = d;
       render();
-      console.log(d);
+      console.log(InsuranceType[d]);
     });
 
   function render() {
     buttons
       .style('font-weight', d => {
         return d === state.slideIdx ? 'bolder' : 'normal';
-      })
-      .text(d => {
-        return d === state.slideIdx ? `SELECTED SLIDE ${d}` : state.slideIdx;
       });
+
     // remove old contents
     select('.sidebar *').remove();
     select('.main-area *').remove();
@@ -52,7 +64,7 @@ function app(data) {
         .append('h1');
     }
 
-    //select('.sidebar').text(article[state.slideIdx]);
+    select('.sidebar').text(article[state.slideIdx]);
     if (slideChartTypeMap[state.slideIdx]) {
       slideChartTypeMap[state.slideIdx](data);
     } else {
@@ -62,9 +74,4 @@ function app(data) {
   
   
   render();
-
-  // setInterval(() => {
-  //   state.slideIdx = (state.slideIdx + 1) % 3;
-  //   render();
-  // }, 5000);
 }

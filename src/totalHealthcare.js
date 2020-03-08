@@ -74,26 +74,50 @@ export default function totalHealthcare(data) {
                 let [a, b] = value;
                 return colors[y(b) + x(a) * n];
                 };
-            
-            var legend = () => {
-                const k = 24;
-                const arrow = uid();
-                return svg`<g font-family=sans-serif font-size=10>
-                <g transform="translate(-${k * n / 2},-${k * n / 2}) rotate(-45 ${k * n / 2},${k * n / 2})">
-                    <marker id="${arrow.id}" markerHeight=10 markerWidth=10 refX=6 refY=3 orient=auto>
-                    <path d="M0,0L9,3L0,6Z" />
-                    </marker>
-                    ${d3.cross(d3.range(n), d3.range(n)).map(([i, j]) => svg`<rect width=${k} height=${k} x=${i * k} y=${(n - 1 - j) * k} fill=${colors[j * n + i]}>
-                    <title>${processedData.title[0]}${labels[j] && ` (${labels[j]})`}
-                ${processedData.title[1]}${labels[i] && ` (${labels[i]})`}</title>
-                    </rect>`)}
-                    <line marker-end="${arrow}" x1=0 x2=${n * k} y1=${n * k} y2=${n * k} stroke=black stroke-width=1.5 />
-                    <line marker-end="${arrow}" y2=0 y1=${n * k} stroke=black stroke-width=1.5 />
-                    <text font-weight="bold" dy="0.71em" transform="rotate(90) translate(${n / 2 * k},6)" text-anchor="middle">${data.title[0]}</text>
-                    <text font-weight="bold" dy="0.71em" transform="translate(${n / 2 * k},${n * k + 6})" text-anchor="middle">${data.title[1]}</text>
-                </g>
-                </g>`;
-                };
+            const k = 24;
+            const arrow = uid();
+            const rects = d3
+            // i think there's a bug here, you are just getting a big array of arryay
+            .cross(d3.range(n), d3.range(n))
+            .map(([i, j]) => {
+                const color = colors[j * n + i];
+                const title = processedData.title;
+                // and probably one here
+                return `<rect width=${k} height=${k} x=${i * k} y=${(n - 1 - j) * k} fill=${color}>
+                        <title>${title[0]}${labels[j] && ` (${labels[j]})`}${title[1]}${labels[i] &&
+                ` (${labels[i]})`}</title>
+                </rect>`;
+            })
+            .join('\n');
+            const legend = `<g class=legend-container font-family=sans-serif font-size=10 transform=translate(900,600)>
+                            <g transform="translate(-${(k * n) / 2},-${(k * n) / 2}) rotate(-45 ${(k * n) / 2},${(k * n) /
+            2})">
+                                <marker
+                                id="${arrow.id}"
+                                markerHeight=10 markerWidth=10 refX=6 refY=3 orient=auto>
+                                <path d="M0,0L9,3L0,6Z" />
+                                </marker>
+                                ${rects}
+                                <line
+                                marker-end="${arrow}"
+                                x1=0 x2=${n * k} y1=${n * k} y2=${n * k} stroke=black stroke-width=1.5 />
+                                ${
+                                    // line doesn't have all of th values necessary to render it (missing x1 x2)
+                                    ''
+                                }
+                                <line marker-end="${arrow}" y2=0 y1=${n * k} stroke=black stroke-width=1.5 />
+                                <text
+                                font-weight="bold" dy="0.71em"
+                                transform="rotate(90)
+                                translate(${(n / 2) * k},6)"
+                                text-anchor="middle">${processedData.title[0]}</text>
+                                <text
+                                font-weight="bold" dy="0.71em"
+                                transform="translate(${(n / 2) * k},${n * k + 6})"
+                                text-anchor="middle">${processedData.title[1]}</text>
+                            </g>
+                            </g>`;
+                    
 
             var svg = div
                 .append("svg")
@@ -102,12 +126,10 @@ export default function totalHealthcare(data) {
                 .classed("svg-content", true)
                 .attr('transform', `translate(${height / 2}, ${width / 4})`);
             
-            //const bi_legend = div.append('div').attr('class', 'legend');
-
-            svg.append("g")
-            .select("legend-container")
-            .html(legend);
-
+            console.log(legend);
+            
+            svg.html(legend);
+            
             svg.append("g")
                 .selectAll("path")
                 .data(topojson.feature(us, us.objects.states).features)
@@ -116,6 +138,12 @@ export default function totalHealthcare(data) {
                 .attr("d", path)
                 .append("title")
                 .text(d => `${d.properties.name}, ${format(processedData.get(d.properties.name))}`)
+                .on("mouseover", function(d) {
+                    // Call the functions for this element.
+                    d3.select(this)
+                    .attr('fill', 'white');
+                    console.log('over');})
+                  
                     
                 
             svg.append("path")
@@ -125,6 +153,7 @@ export default function totalHealthcare(data) {
                 .attr("stroke-linejoin", "round")
                 .attr("d", path);
     });
+            
 }
 render();
 }

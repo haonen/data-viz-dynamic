@@ -54,10 +54,14 @@ h1, h2, h3, h4, h5 {
   width: 1000px;
 }
 
-.legend-container {
-  align-items: center;
-  text-transform: uppercase;
-}
+/*.legend-container {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 100%;
+  vertical-align: top;
+  overflow: hidden;
+  padding-top: 50px;
+}*/
 
 .svg-container {
   display: inline-block;
@@ -79,3 +83,5 @@ h1, h2, h3, h4, h5 {
   top: 200px;
   left: 1000px;
 }
+
+
