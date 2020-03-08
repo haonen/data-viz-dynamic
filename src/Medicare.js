@@ -16,7 +16,7 @@ function processData(data, year) {
 }
 
 
-export default function totalHealthcare(data) {
+export default function Medicare(data) {
     
     //console.log(processedData.get('Alabama')[0]);
      // declare constants
