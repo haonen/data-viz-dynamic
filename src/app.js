@@ -58,6 +58,7 @@ function app(data, article) {
     // remove old contents
     select('.sidebar *').remove();
     select('.main-area *').remove();
+    select('.svg-content').remove();
     // start doing stuff
     if (state.slideIdx > 0) {
       select('.main-area')

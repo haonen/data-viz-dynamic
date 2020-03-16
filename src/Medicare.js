@@ -21,19 +21,23 @@ export default function Medicare(data) {
     //console.log(processedData.get('Alabama')[0]);
      // declare constants
     const height = 600;
-    const width = 1000;
+    const width = 600;
     const state = {year: 2014};
-    const div = select('.main-area')
+    
+    const div = d3.select('.main-area')
                 .append('div')
                 .attr('class', 'flex-down');
+
+    
     const dropDown = div
     .append('select')
     .classed('dropdown', true)
     .on('change', function dropdownReaction(d) {
         state.year = this.value;
         render();
-    });
         
+    });
+
     dropDown
     .selectAll('option')
     .data([2014, 2015, 2016])
@@ -41,6 +45,7 @@ export default function Medicare(data) {
     .append('option')
     .attr('value', d => d)
     .text(d => d)
+    
 
     const colors = [
         "#e8e8e8", "#ace4e4", "#5ac8c8",
@@ -49,48 +54,24 @@ export default function Medicare(data) {
       ];
     
     const labels = ["low", "", "high"];
-    
-    
-    function render() {
-        const processedData = processData(data, state.year);
-        var format = (value) => {
-            if (!value) return "N/A";
-            let [a, b] = value;
-            return `${processedData.title[0]} ${a} plans per captia ${labels[x(a)] && ` (${labels[x(a)]})`}
-            ${processedData.title[1]} ${b*100}% ${labels[y(b)] && ` (${labels[y(b)]})`}`;
-          };
-    
-        var path = d3.geoPath();
-        var n = Math.floor(Math.sqrt(colors.length));
-        var x = d3.scaleQuantile(Array.from(processedData.values(), d => d[0]), d3.range(n));
-        var y = d3.scaleQuantile(Array.from(processedData.values(), d => d[1]), d3.range(n));
-        
-        d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json").then(function(us) {
-            console.log(us.objects.states.geometries);
-            var states = new Map(us.objects.states.geometries.map(d => [d.id, d.properties]));
-            //console.log(states);
-            function color(value){
-                if (!value) return "#ccc";
-                let [a, b] = value;
-                return colors[y(b) + x(a) * n];
-                };
-            
-            const k = 24;
-            const arrow = uid();
-            const rects = d3
-            // i think there's a bug here, you are just getting a big array of arryay
-            .cross(d3.range(n), d3.range(n))
+    var n = Math.floor(Math.sqrt(colors.length));
+    const k = 24;
+    const arrow = uid();
+    const rects = d3
+        // i think there's a bug here, you are just getting a big array of arryay
+        .cross(d3.range(n), d3.range(n))
             .map(([i, j]) => {
                 const color = colors[j * n + i];
-                const title = processedData.title;
+                //const title = processedData.title;
                 // and probably one here
                 return `<rect width=${k} height=${k} x=${i * k} y=${(n - 1 - j) * k} fill=${color}>
-                        <title>${title[0]}${labels[j] && ` (${labels[j]})`}${title[1]}${labels[i] &&
+                        <title>#Plans Per Capita${labels[j] && ` (${labels[j]})`}Medicare Coverage${labels[i] &&
                 ` (${labels[i]})`}</title>
                 </rect>`;
             })
             .join('\n');
-            const legend = `<g class=legend-container font-family=sans-serif font-size=10 transform=translate(900,600)>
+
+    const legend = `<g class=legend-container font-family=sans-serif font-size=10 transform=translate(900,600)>
                             <g transform="translate(-${(k * n) / 2},-${(k * n) / 2}) rotate(-45 ${(k * n) / 2},${(k * n) /
             2})">
                                 <marker
@@ -111,22 +92,50 @@ export default function Medicare(data) {
                                 font-weight="bold" dy="0.71em"
                                 transform="rotate(90)
                                 translate(${(n / 2) * k},6)"
-                                text-anchor="middle">${processedData.title[0]}</text>
+                                text-anchor="middle">#Plans Per Capita</text>
                                 <text
                                 font-weight="bold" dy="0.71em"
                                 transform="translate(${(n / 2) * k},${n * k + 6})"
-                                text-anchor="middle">${processedData.title[1]}</text>
+                                text-anchor="middle">Medicare Coverage</text>
                             </g>
                             </g>`;
-
-            var svg = div
-                .append("svg")
-                .attr("preserveAspectRatio", "xMinYMin meet")
-                .attr("viewBox", "0 0 1500 900")
-                .classed("svg-content", true)
-                .attr('transform', `translate(${height / 2}, ${width / 4})`);
-            
+    
+    var svg = div
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "-100 -50 2000 900")
+    .classed("svg-content", true)
+    .attr('transform', `translate(${height * 3/5 }, ${width / 20})`);
+    
+                        
+    var path = d3.geoPath();
+    
+    function render() {
+        const processedData = processData(data, state.year);
+        var format = (value) => {
+            if (!value) return "N/A";
+            let [a, b] = value;
+            return `${processedData.title[0]} ${a}${labels[x(a)] && ` (${labels[x(a)]})`}
+            ${processedData.title[1]} ${b*100}% ${labels[y(b)] && ` (${labels[y(b)]})`}`;
+          };
+    
+        
+       
+        var x = d3.scaleQuantile(Array.from(processedData.values(), d => d[0]), d3.range(n));
+        var y = d3.scaleQuantile(Array.from(processedData.values(), d => d[1]), d3.range(n));
+        svg.selectAll(".legend-container").remove();
+        d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json").then(function(us) {
+            console.log(us.objects.states.geometries);
+            var states = new Map(us.objects.states.geometries.map(d => [d.id, d.properties]));
+            //console.log(states);
+            function color(value){
+                if (!value) return "#ccc";
+                let [a, b] = value;
+                return colors[y(b) + x(a) * n];
+                };
+           
             svg.html(legend);
+            
 
             svg.append("g")
                 .selectAll("path")

@@ -4,19 +4,28 @@
     <title>Dynamic Data Viz (yuweiz)</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet"> 
   </head>
   <body>
     <div id="app" class="full-height">
       <div class="flex-down">
         <h1>Demographic Patterns VS Business Patterns in Health Insurance Coverage</h1>
         <h3>Oh no what's wrong with the health system in U.S.!</h3>
-        <h5>The Second/Third bi-variate choropleth with legend is on the way!</h5>
+        <h5>
+          <p>This series of bi-variate choropleth aims at detecting the difference between demographic pattern and business pattern in health insurance coverage in U.S. at state level from 2014 - 2016. The demographic pattern is measured by percentage of population covered by the health insurance. And the business pattern is measured by number of insurance plans provided in the insurance market divided by total population (per capita). The color represents the quantile of data in each plot. The demographic pattern provides insights on how many people are covered by the health insurance and the business pattern highlights the private insurance market size. A bi-variate choropleth allows us to see both the divergence and convergence of two different measurements in a choropleth, which maintains the geolocation information. By comparing these two measurements, we are able to examine if health insurance coverage develops at the same pace as private insurance market. .</p>
+          <p>You can explore this chart by clicking the buttons below to choose health coverage type and choosing year at the dropdown. While your mouse move over a state, it will pop up a rectangle containing the data for this state.</p>
+        </h5>
         <div class="buttons-container"></div>
       </div>
       <div class="flex full-height">
         <div class="sidebar flex-down full-height"></div>
         <div class="main-area flex full-height full-width"></div>
+        <div class="data-source">
+          <ul>Data Source: 
+            <a href="https://www.kff.org/other/state-indicator/total-population/?currentTimeframe=2&sortModel=%7B%22colId%22:%22Location%22,%22sort%22:%22asc%22%7D"><li>1. insurance coverage rate from The Kaiser Family Foundation</li></a>
+            <a href="https://www.kaggle.com/hhs/health-insurance-marketplace#BenefitsCostSharing.csv"><li>2. number of benefit plans from kaggle</li></a>
+          </ul>
+             </div>
       </div>
     </div>
     <script src="https://d3js.org/d3.v5.min.js"></script>

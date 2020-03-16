@@ -4,7 +4,7 @@ a {
 
 html,
 body {
-  font-family: 'Abril Fatface';
+  font-family: 'Baloo Chettan 2', cursive;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -42,9 +42,10 @@ h1, h2, h3, h4, h5 {
 }
 
 .sidebar {
-  background-color: linen;
+  background-color: rgb(218, 221, 228);
   padding: 10px;
-  width: 200px;
+  width: 300px;
+  height: 500px;
 }
 
 .main-area {
@@ -54,14 +55,11 @@ h1, h2, h3, h4, h5 {
   width: 1000px;
 }
 
-/*.legend-container {
-  display: inline-block;
-  position: relative;
-  padding-bottom: 100%;
-  vertical-align: top;
-  overflow: hidden;
-  padding-top: 50px;
-}*/
+.data-source {
+  position: absolute;
+  top: 750px;
+  left: 400px;
+}
 
 .svg-container {
   display: inline-block;
@@ -69,18 +67,21 @@ h1, h2, h3, h4, h5 {
   padding-bottom: 100%;
   vertical-align: top;
   overflow: hidden;
-  padding-top: 50px;
+  width: 500px;
+  height: 500px;
+  
 }
 .svg-content {
   display: inline-block;
   position: absolute;
-  top: 0;
+  top: 250px;
   left: 0;
+  
 }
 
 .dropdown{
   position: absolute;
-  top: 200px;
+  top: 270px;
   left: 1000px;
 }
 

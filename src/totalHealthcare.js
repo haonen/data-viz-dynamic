@@ -21,7 +21,7 @@ export default function totalHealthcare(data) {
     //console.log(processedData.get('Alabama')[0]);
      // declare constants
     const height = 600;
-    const width = 1000;
+    const width = 600;
     const state = {year: 2014};
     const div = select('.main-area')
                 .append('div')
@@ -39,8 +39,10 @@ export default function totalHealthcare(data) {
     .data([2014, 2015, 2016])
     .enter()
     .append('option')
-    .attr('value', d => d)
+    .attr('value', d =>d)
     .text(d => d)
+    .property("selected", function(d){
+        return d == 2014;})
 
     const colors = [
         "#e8e8e8", "#ace4e4", "#5ac8c8",
@@ -51,20 +53,73 @@ export default function totalHealthcare(data) {
     const labels = ["low", "", "high"];
     
     
+
+    var path = d3.geoPath();
+    
+    
+    var n = Math.floor(Math.sqrt(colors.length));
+    const k = 24;
+    const arrow = uid();
+    const rects = d3
+    // i think there's a bug here, you are just getting a big array of arryay
+        .cross(d3.range(n), d3.range(n))
+        .map(([i, j]) => {
+            const color = colors[j * n + i];
+            //const title = processedData.title;
+            // and probably one here
+            return `<rect width=${k} height=${k} x=${i * k} y=${(n - 1 - j) * k} fill=${color}>
+                    <title>#Plans Per Capita${labels[j] && ` (${labels[j]})`}Total Coverage${labels[i] &&
+            ` (${labels[i]})`}</title>
+            </rect>`;
+        })
+        .join('\n');
+    const legend = `<g class=legend-container font-family=sans-serif font-size=10 transform=translate(900,600)>
+                        <g transform="translate(-${(k * n) / 2},-${(k * n) / 2}) rotate(-45 ${(k * n) / 2},${(k * n) /
+        2})">
+                            <marker
+                            id="${arrow.id}"
+                            markerHeight=10 markerWidth=10 refX=6 refY=3 orient=auto>
+                            <path d="M0,0L9,3L0,6Z" />
+                            </marker>
+                            ${rects}
+                            <line
+                            marker-end="${arrow}"
+                            x1=0 x2=${n * k} y1=${n * k} y2=${n * k} stroke=black stroke-width=1.5 />
+                            ${
+                                // line doesn't have all of th values necessary to render it (missing x1 x2)
+                                ''
+                            }
+                            <line marker-end="${arrow}" y2=0 y1=${n * k} stroke=black stroke-width=1.5 />
+                            <text
+                            font-weight="bold" dy="0.71em"
+                            transform="rotate(90)
+                            translate(${(n / 2) * k},6)"
+                            text-anchor="middle">#Plans Per Capita</text>
+                            <text
+                            font-weight="bold" dy="0.71em"
+                            transform="translate(${(n / 2) * k},${n * k + 6})"
+                            text-anchor="middle">Total Coverage</text>
+                        </g>
+                        </g>`;
+    
+    var svg = div
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "-100 -50 2000 900")
+    .classed("svg-content", true)
+    .attr('transform', `translate(${height * 3/5}, ${width / 20})`);
+
     function render() {
         const processedData = processData(data, state.year);
+        var x = d3.scaleQuantile(Array.from(processedData.values(), d => d[0]), d3.range(n));
+        var y = d3.scaleQuantile(Array.from(processedData.values(), d => d[1]), d3.range(n));
         var format = (value) => {
             if (!value) return "N/A";
             let [a, b] = value;
-            return `${processedData.title[0]} ${a} plans per captia ${labels[x(a)] && ` (${labels[x(a)]})`}
+            return `${processedData.title[0]} ${a}${labels[x(a)] && ` (${labels[x(a)]})`}
             ${processedData.title[1]} ${b*100}% ${labels[y(b)] && ` (${labels[y(b)]})`}`;
           };
-    
-        var path = d3.geoPath();
-        var n = Math.floor(Math.sqrt(colors.length));
-        var x = d3.scaleQuantile(Array.from(processedData.values(), d => d[0]), d3.range(n));
-        var y = d3.scaleQuantile(Array.from(processedData.values(), d => d[1]), d3.range(n));
-        
+        svg.selectAll(".legend-container").remove();
         d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json").then(function(us) {
             console.log(us.objects.states.geometries);
             var states = new Map(us.objects.states.geometries.map(d => [d.id, d.properties]));
@@ -74,62 +129,8 @@ export default function totalHealthcare(data) {
                 let [a, b] = value;
                 return colors[y(b) + x(a) * n];
                 };
-            const k = 24;
-            const arrow = uid();
-            const rects = d3
-            // i think there's a bug here, you are just getting a big array of arryay
-            .cross(d3.range(n), d3.range(n))
-            .map(([i, j]) => {
-                const color = colors[j * n + i];
-                const title = processedData.title;
-                // and probably one here
-                return `<rect width=${k} height=${k} x=${i * k} y=${(n - 1 - j) * k} fill=${color}>
-                        <title>${title[0]}${labels[j] && ` (${labels[j]})`}${title[1]}${labels[i] &&
-                ` (${labels[i]})`}</title>
-                </rect>`;
-            })
-            .join('\n');
-            const legend = `<g class=legend-container font-family=sans-serif font-size=10 transform=translate(900,600)>
-                            <g transform="translate(-${(k * n) / 2},-${(k * n) / 2}) rotate(-45 ${(k * n) / 2},${(k * n) /
-            2})">
-                                <marker
-                                id="${arrow.id}"
-                                markerHeight=10 markerWidth=10 refX=6 refY=3 orient=auto>
-                                <path d="M0,0L9,3L0,6Z" />
-                                </marker>
-                                ${rects}
-                                <line
-                                marker-end="${arrow}"
-                                x1=0 x2=${n * k} y1=${n * k} y2=${n * k} stroke=black stroke-width=1.5 />
-                                ${
-                                    // line doesn't have all of th values necessary to render it (missing x1 x2)
-                                    ''
-                                }
-                                <line marker-end="${arrow}" y2=0 y1=${n * k} stroke=black stroke-width=1.5 />
-                                <text
-                                font-weight="bold" dy="0.71em"
-                                transform="rotate(90)
-                                translate(${(n / 2) * k},6)"
-                                text-anchor="middle">${processedData.title[0]}</text>
-                                <text
-                                font-weight="bold" dy="0.71em"
-                                transform="translate(${(n / 2) * k},${n * k + 6})"
-                                text-anchor="middle">${processedData.title[1]}</text>
-                            </g>
-                            </g>`;
-                    
-
-            var svg = div
-                .append("svg")
-                .attr("preserveAspectRatio", "xMinYMin meet")
-                .attr("viewBox", "0 0 1500 900")
-                .classed("svg-content", true)
-                .attr('transform', `translate(${height / 2}, ${width / 4})`);
-            
-            console.log(legend);
-            
+                     
             svg.html(legend);
-            
             svg.append("g")
                 .selectAll("path")
                 .data(topojson.feature(us, us.objects.states).features)
@@ -138,11 +139,7 @@ export default function totalHealthcare(data) {
                 .attr("d", path)
                 .append("title")
                 .text(d => `${d.properties.name}, ${format(processedData.get(d.properties.name))}`)
-                .on("mouseover", function(d) {
-                    // Call the functions for this element.
-                    d3.select(this)
-                    .attr('fill', 'white');
-                    console.log('over');})
+                                
                   
                     
                 
