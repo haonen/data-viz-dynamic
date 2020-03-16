@@ -20,8 +20,8 @@ export default function Employer(data) {
     
     //console.log(processedData.get('Alabama')[0]);
      // declare constants
-    const height = 600;
-    const width = 600;
+    const height = 700;
+    const width = 700;
     const state = {year: 2014};
     const div = select('.main-area')
                 .append('div')
@@ -99,9 +99,11 @@ export default function Employer(data) {
     var svg = div
     .append("svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "-100 -50 2000 900")
+    .attr("viewBox", "-50 -50 1000 500")
     .classed("svg-content", true)
-    .attr('transform', `translate(${height * 3/5}, ${width / 20})`);
+    .attr('transform', `translate(${height * 3/5}, ${width / 20})`)
+    .attr('height', height)
+    .attr('width', width);
 
     var path = d3.geoPath();
     
