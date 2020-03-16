@@ -36,13 +36,12 @@ export default function totalHealthcare(data) {
         
     dropDown
     .selectAll('option')
-    .data([2014, 2015, 2016])
+    .data(["None", 2014, 2015, 2016])
     .enter()
     .append('option')
     .attr('value', d =>d)
     .text(d => d)
-    .property("selected", function(d){
-        return d == 2014;})
+    
 
     const colors = [
         "#e8e8e8", "#ace4e4", "#5ac8c8",

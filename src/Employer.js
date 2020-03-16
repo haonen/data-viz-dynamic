@@ -37,7 +37,7 @@ export default function Employer(data) {
         
     dropDown
     .selectAll('option')
-    .data([2014, 2015, 2016])
+    .data(["None", 2014, 2015, 2016])
     .enter()
     .append('option')
     .attr('value', d => d)
