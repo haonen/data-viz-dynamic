@@ -15,11 +15,10 @@ function processData(data, year) {
     return processedData;
 }
 
+//bi-varaite choropleth code source: https://observablehq.com/@d3/bivariate-choropleth
 
 export default function totalHealthcare(data) {
     
-    //console.log(processedData.get('Alabama')[0]);
-     // declare constants
     const height = 700;
     const width = 700;
     const state = {year: 2014};
@@ -59,13 +58,11 @@ export default function totalHealthcare(data) {
     var n = Math.floor(Math.sqrt(colors.length));
     const k = 24;
     const arrow = uid();
+    //the legend code is modified from Andrew's sample code
     const rects = d3
-    // i think there's a bug here, you are just getting a big array of arryay
         .cross(d3.range(n), d3.range(n))
         .map(([i, j]) => {
             const color = colors[j * n + i];
-            //const title = processedData.title;
-            // and probably one here
             return `<rect width=${k} height=${k} x=${i * k} y=${(n - 1 - j) * k} fill=${color}>
                     <title>#Plans Per Capita${labels[j] && ` (${labels[j]})`}Total Coverage${labels[i] &&
             ` (${labels[i]})`}</title>
@@ -140,10 +137,7 @@ export default function totalHealthcare(data) {
                 .attr("d", path)
                 .append("title")
                 .text(d => `${d.properties.name}, ${format(processedData.get(d.properties.name))}`)
-                                
-                  
-                    
-                
+                                                
             svg.append("path")
                 .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
                 .attr("fill", "none")

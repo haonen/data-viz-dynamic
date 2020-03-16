@@ -1,3 +1,4 @@
+//The code structure is based on Andrew's sample code
 const domReady = require('domready');
 import {select} from 'd3-selection';
 import {csv, json} from 'd3-fetch';
@@ -69,7 +70,7 @@ function app(data, article) {
     if (slideChartTypeMap[state.slideIdx]) {
       slideChartTypeMap[state.slideIdx](data);
     } else {
-      // TODO add a "you screwed up comment/view/whatever"
+      console.log("You screwed it up!");
     }
   }
   

@@ -1,5 +1,4 @@
-// example of how to export functions
-// this particular util only doubles a value so it shouldn't be too useful
+//uid code copied from Observable library: https://github.com/observablehq/stdlib/blob/master/src/dom/uid.js
 var count = 0;
 
 export default function uid(name) {

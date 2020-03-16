@@ -17,9 +17,6 @@ function processData(data, year) {
 
 
 export default function Medicare(data) {
-    
-    //console.log(processedData.get('Alabama')[0]);
-     // declare constants
     const height = 700;
     const width = 700;
     const state = {year: 2014};
@@ -58,12 +55,9 @@ export default function Medicare(data) {
     const k = 24;
     const arrow = uid();
     const rects = d3
-        // i think there's a bug here, you are just getting a big array of arryay
         .cross(d3.range(n), d3.range(n))
             .map(([i, j]) => {
                 const color = colors[j * n + i];
-                //const title = processedData.title;
-                // and probably one here
                 return `<rect width=${k} height=${k} x=${i * k} y=${(n - 1 - j) * k} fill=${color}>
                         <title>#Plans Per Capita${labels[j] && ` (${labels[j]})`}Medicare Coverage${labels[i] &&
                 ` (${labels[i]})`}</title>
